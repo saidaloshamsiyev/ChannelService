@@ -10,7 +10,12 @@ import java.util.UUID;
 @Repository
 public interface ChannelRepository extends JpaRepository<ChannelEntity, UUID> {
     Boolean existsByNickName(String name);
+
     Optional<ChannelEntity> findByNickNameOrName(String nickName, String name);
+
     List<ChannelEntity> findByOwnerId(UUID ownerId);
+
+
+
 
 }
