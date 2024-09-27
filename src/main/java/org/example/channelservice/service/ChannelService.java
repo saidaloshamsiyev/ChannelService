@@ -3,7 +3,6 @@ package org.example.channelservice.service;
 import org.example.channelservice.domain.dto.request.ChannelRequest;
 import org.example.channelservice.domain.dto.request.ChannelUpdateRequest;
 import org.example.channelservice.domain.dto.response.ChannelResponse;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -15,5 +14,6 @@ public interface ChannelService {
     ChannelResponse findByNicknameOrName(String name);
     List<ChannelResponse> findAllByOwnerId(UUID ownerId);
     ChannelResponse updateChannel(UUID channelId, ChannelUpdateRequest updateRequest);
+
 
 }
