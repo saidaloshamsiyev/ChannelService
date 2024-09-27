@@ -15,4 +15,5 @@ public interface UserServiceClient {
 
     @GetMapping("/api/user/{id}")
     UserResponse findById(@PathVariable("id") UUID id);
+
 }

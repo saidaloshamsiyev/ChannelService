@@ -9,3 +9,4 @@ public class ChannelUpdateRequest {
     private String nickName;
     private String imagePath;
 }
+

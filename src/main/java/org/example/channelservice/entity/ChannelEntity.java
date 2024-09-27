@@ -25,4 +25,5 @@ public class ChannelEntity{
     private String nickName;
     private UUID ownerId;
     private Integer subscriberCount;
+
 }

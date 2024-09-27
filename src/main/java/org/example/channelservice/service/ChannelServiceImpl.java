@@ -93,6 +93,7 @@ public class ChannelServiceImpl implements ChannelService {
                 .build();
     }
 
+
     @Override
     public List<ChannelResponse> findAllByOwnerId(UUID ownerId) {
 
