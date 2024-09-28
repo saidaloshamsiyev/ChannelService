@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import metube.com.dto.BaseEntity;
+import org.springframework.objenesis.instantiator.util.UnsafeUtils;
 
 import java.util.UUID;
 
@@ -14,13 +14,10 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-@Table(name = "channels")
-public class ChannelEntity extends BaseEntity {
+@Table(name = "subscriptions")
+public class SubscriptionEntity extends BaseEntity {
+
     private UUID id;
-    private String name;
-    private String description;
-    private String imagePath;
-    private String nickName;
-    private UUID ownerId;
-    private Integer subscriberCount;
+    private UUID subscriberId;
+    private UUID channelId;
 }
