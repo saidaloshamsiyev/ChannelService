@@ -16,7 +16,6 @@ import java.util.UUID;
 @Entity
 @Table(name = "subscriptions")
 public class SubscriptionEntity extends BaseEntity {
-
     private UUID id;
     private UUID subscriberId;
     private UUID channelId;

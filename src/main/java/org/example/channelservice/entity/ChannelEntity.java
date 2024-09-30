@@ -16,7 +16,6 @@ import java.util.UUID;
 @Entity
 @Table(name = "channels")
 public class ChannelEntity extends BaseEntity {
-    private UUID id;
     private String name;
     private String description;
     private String imagePath;

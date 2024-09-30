@@ -57,7 +57,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         );
     }
 
-
     @Override
     public void delete(UUID id) {
         SubscriptionEntity subscription = findById(id);
@@ -100,8 +99,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             throw new BaseException("Channel not found", HttpStatus.NOT_FOUND.value());
         }
     }
-
-
-
-
 }
+
+
+
+
+
+
