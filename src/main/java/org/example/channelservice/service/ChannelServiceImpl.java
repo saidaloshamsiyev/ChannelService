@@ -1,5 +1,4 @@
 package org.example.channelservice.service;
-
 import lombok.RequiredArgsConstructor;
 import metube.com.dto.response.UserResponse;
 import org.example.channelservice.clients.UserServiceClient;
@@ -9,10 +8,14 @@ import org.example.channelservice.domain.dto.response.ChannelResponse;
 import org.example.channelservice.entity.ChannelEntity;
 import org.example.channelservice.exception.BaseException;
 import org.example.channelservice.repository.ChannelRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -23,9 +26,11 @@ import java.util.stream.Collectors;
 public class ChannelServiceImpl implements ChannelService {
     private final ChannelRepository channelRepository;
     private final UserServiceClient userServiceClient;
+    private final String UPLOAD_DIR = "resources/images";
+
 
     @Override
-    public ChannelResponse save(ChannelRequest channelRequest) {
+    public ChannelResponse save(ChannelRequest channelRequest, MultipartFile imageFile) {
         UUID ownerId = channelRequest.getOwnerId();
 
         if (channelRepository.existsByNickName(channelRequest.getNickName())) {
@@ -38,11 +43,20 @@ public class ChannelServiceImpl implements ChannelService {
             throw new BaseException("User not found", HttpStatus.NOT_FOUND.value());
         }
 
+        String fileName = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
+        Path filePath = Paths.get(UPLOAD_DIR, fileName);
+
+        try {
+            Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to save image file", e);
+        }
+
         ChannelEntity channelEntity = new ChannelEntity();
         channelEntity.setNickName(channelRequest.getNickName());
         channelEntity.setDescription(channelRequest.getDescription());
-        channelEntity.setImagePath(channelRequest.getImagePath());
-        channelEntity.setOwnerId(channelRequest.getOwnerId());
+        channelEntity.setImagePath(filePath.toString());
+        channelEntity.setOwnerId(ownerId);
         channelRepository.save(channelEntity);
 
         return ChannelResponse.builder().
@@ -65,11 +79,13 @@ public class ChannelServiceImpl implements ChannelService {
                 .build();
     }
 
+
     @Override
     public void delete(UUID id) {
         ChannelResponse response = findById(id);
         channelRepository.deleteById(id);
     }
+
 
     @Override
     public List<ChannelResponse> findAll() {
