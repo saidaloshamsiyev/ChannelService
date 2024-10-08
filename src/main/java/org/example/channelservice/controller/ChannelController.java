@@ -7,9 +7,10 @@ import org.example.channelservice.service.ChannelService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.UUID;
+
 
 @RestController
 @RequestMapping("/api/channel")
@@ -17,9 +18,10 @@ import java.util.UUID;
 public class ChannelController {
     private final ChannelService channelService;
 
-    @PostMapping
-    public ResponseEntity<ChannelResponse> createChannel(@RequestBody ChannelRequest channelRequest) {
-        ChannelResponse savedChannel = channelService.save(channelRequest);
+    @PostMapping("/create")
+    public ResponseEntity<ChannelResponse> createChannel(@RequestBody ChannelRequest channelRequest,
+                                                         @RequestPart("imageFile") MultipartFile imageFile) {
+        ChannelResponse savedChannel = channelService.save(channelRequest, imageFile);
         return new ResponseEntity<>(savedChannel, HttpStatus.CREATED);
     }
 
