@@ -33,10 +33,6 @@ public class ChannelServiceImpl implements ChannelService {
     private final   ChannelRepository channelRepository;
     private  final UserServiceClient userServiceClient;
 
-    @Override
-    public ChannelResponse save(ChannelRequest channelRequest, MultipartFile file) {
-        return null;
-    }
 
     @Override
     public ChannelResponse save(ChannelRequest channelRequest, MultipartFile file) {
@@ -52,6 +48,9 @@ public class ChannelServiceImpl implements ChannelService {
             throw new BaseException("User not found", HttpStatus.NOT_FOUND.value());
         }
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+
+        String UPLOAD_DIR = "C:\\metube\\ChannelService\\src\\main\\resources";
+
         Path filePath = Paths.get(UPLOAD_DIR, fileName);
         try {
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
@@ -72,7 +71,10 @@ public class ChannelServiceImpl implements ChannelService {
                 .imagePath(channelEntity.getImagePath())
                 .ownerId(channelEntity.getOwnerId())
                 .build();
+
     }
+
+
 
 
 
