@@ -1,11 +1,11 @@
 package org.example.channelservice.service.subscription;
 
 import lombok.RequiredArgsConstructor;
-import metube.com.dto.response.UserResponse;
 import org.example.channelservice.clients.UserServiceClient;
 import org.example.channelservice.domain.dto.request.SubscriptionRequest;
 import org.example.channelservice.domain.dto.response.ChannelResponse;
 import org.example.channelservice.domain.dto.response.SubscriptionResponse;
+import org.example.channelservice.domain.dto.response.UserResponse;
 import org.example.channelservice.entity.SubscriptionEntity;
 import org.example.channelservice.exception.BaseException;
 import org.example.channelservice.repository.SubscriptionRepository;
@@ -26,7 +26,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public SubscriptionResponse create(SubscriptionRequest subscriptionRequest) {
-        UserResponse userResponse = userServiceClient.findById(subscriptionRequest.getSubscriberId());
+        UserResponse userResponse = userServiceClient.getUser(subscriptionRequest.getSubscriberId());
         ChannelResponse channelResponse = channelService.findById(subscriptionRequest.getChannelId());
         if (userResponse == null) {
             throw new BaseException("User not found", HttpStatus.NOT_FOUND.value());
@@ -61,7 +61,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     public void delete(UUID id) {
         SubscriptionEntity subscription = findById(id);
-        UserResponse userResponse = userServiceClient.findById(subscription.getSubscriberId());
+        UserResponse userResponse = userServiceClient.getUser(subscription.getSubscriberId());
         if (userResponse == null) {
             throw new BaseException("User not found", HttpStatus.NOT_FOUND.value());
         }
@@ -76,7 +76,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public SubscriptionResponse findAllSubsBySubsId(UUID userId) {
-        UserResponse userResponse = userServiceClient.findById(userId);
+        UserResponse userResponse = userServiceClient.getUser(userId);
         if (userResponse == null) {
             throw new BaseException("User not found", HttpStatus.NOT_FOUND.value());
         }
@@ -91,7 +91,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     public void removeSubscriber(UUID channelId, UUID subscriberId) {
-        UserResponse userResponse = userServiceClient.findById(subscriberId);
+        UserResponse userResponse = userServiceClient.getUser(subscriberId);
         if (userResponse == null) {
             throw new BaseException("User not found", HttpStatus.NOT_FOUND.value());
         }

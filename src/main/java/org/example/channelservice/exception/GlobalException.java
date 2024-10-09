@@ -27,6 +27,6 @@ public class GlobalException {
                                 (FieldError::getDefaultMessage)
                         )
                 );
-        return ResponseEntity.status(400).body(errors);
+        return ResponseEntity.status(404).body(errors);
     }
 }

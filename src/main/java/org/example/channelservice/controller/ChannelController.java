@@ -4,6 +4,7 @@ import org.example.channelservice.domain.dto.request.ChannelRequest;
 import org.example.channelservice.domain.dto.request.ChannelUpdateRequest;
 import org.example.channelservice.domain.dto.response.ChannelResponse;
 import org.example.channelservice.service.ChannelService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +14,11 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/channel")
-@RequiredArgsConstructor
+@RequiredArgsConstructor()
 public class ChannelController {
-    private final ChannelService channelService;
+
+
+    private final   ChannelService channelService;
 
     @PostMapping
     public ResponseEntity<ChannelResponse> createChannel(@RequestBody ChannelRequest channelRequest) {
