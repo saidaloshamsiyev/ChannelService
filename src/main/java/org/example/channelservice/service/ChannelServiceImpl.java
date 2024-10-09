@@ -13,7 +13,13 @@ import org.example.channelservice.exception.BaseException;
 import org.example.channelservice.repository.ChannelRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -22,12 +28,13 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ChannelServiceImpl implements ChannelService {
+    private final String UPLOAD_DIR = "resources/images";
 
     private final   ChannelRepository channelRepository;
 
     private  final UserServiceClient userServiceClient;
     @Override
-    public ChannelResponse save(ChannelRequest channelRequest) {
+    public ChannelResponse save(ChannelRequest channelRequest, MultipartFile file) {
         UUID ownerId = channelRequest.getOwnerId();
 
         if (channelRepository.existsByNickName(channelRequest.getNickName())) {
@@ -39,12 +46,19 @@ public class ChannelServiceImpl implements ChannelService {
         if(userResponse == null) {
             throw new BaseException("User not found", HttpStatus.NOT_FOUND.value());
         }
+        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        Path filePath = Paths.get(UPLOAD_DIR, fileName);
+        try {
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to save image file", e);
+        }
 
         ChannelEntity channelEntity = new ChannelEntity();
         channelEntity.setNickName(channelRequest.getNickName());
         channelEntity.setDescription(channelRequest.getDescription());
-        channelEntity.setImagePath(channelRequest.getImagePath());
-        channelEntity.setOwnerId(channelRequest.getOwnerId());
+        channelEntity.setImagePath(filePath.toString());
+        channelEntity.setOwnerId(ownerId);
         channelRepository.save(channelEntity);
 
         return ChannelResponse.builder().
