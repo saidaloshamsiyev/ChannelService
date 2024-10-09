@@ -10,4 +10,5 @@ public class ChannelServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(ChannelServiceApplication.class, args);
     }
+    
 }
