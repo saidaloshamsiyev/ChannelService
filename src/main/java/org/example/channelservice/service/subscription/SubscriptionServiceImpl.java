@@ -57,7 +57,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         );
     }
 
-
     @Override
     public void delete(UUID id) {
         SubscriptionEntity subscription = findById(id);
@@ -70,7 +69,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             throw new BaseException("Channel not found", HttpStatus.NOT_FOUND.value());
         }
         subscriptionRepository.delete(subscription);
-        // channelServiceda kanaldan bu obunachini olib tashlash methodi bo'lishi kerak
+        // channelServiceda kanaldan bu obunachini olib tashlash methodi bo'lishi kerak buyoda  cccccccccccccccccccccccc
         removeSubscriber(subscription.getChannelId(), subscription.getSubscriberId());
     }
 
@@ -100,8 +99,12 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             throw new BaseException("Channel not found", HttpStatus.NOT_FOUND.value());
         }
     }
-
-
-
-
 }
+
+
+
+
+
+
+
+
