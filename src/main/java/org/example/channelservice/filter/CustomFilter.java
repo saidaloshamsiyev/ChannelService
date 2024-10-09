@@ -17,10 +17,8 @@ public class CustomFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String username = request.getHeader("X-Username");
-        String role = request.getHeader("X-Roles");
 
-
-        if (Objects.isNull(username) || Objects.isNull(role)) {
+        if (Objects.isNull(username)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -28,7 +26,7 @@ public class CustomFilter extends OncePerRequestFilter {
 
         UsernamePasswordAuthenticationToken auth =
                 new UsernamePasswordAuthenticationToken
-                        (username, null, List.of(new SimpleGrantedAuthority(role)));
+                        (username, null, null);
 
         SecurityContextHolder.getContext().setAuthentication(auth);
         filterChain.doFilter(request, response);

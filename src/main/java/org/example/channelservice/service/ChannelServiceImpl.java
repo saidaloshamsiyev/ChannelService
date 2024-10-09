@@ -13,6 +13,7 @@ import org.example.channelservice.exception.BaseException;
 import org.example.channelservice.repository.ChannelRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,8 +25,13 @@ import java.util.stream.Collectors;
 public class ChannelServiceImpl implements ChannelService {
 
     private final   ChannelRepository channelRepository;
-
     private  final UserServiceClient userServiceClient;
+
+    @Override
+    public ChannelResponse save(ChannelRequest channelRequest, MultipartFile file) {
+        return null;
+    }
+
     @Override
     public ChannelResponse save(ChannelRequest channelRequest) {
         UUID ownerId = channelRequest.getOwnerId();
@@ -54,6 +60,8 @@ public class ChannelServiceImpl implements ChannelService {
                 .ownerId(channelEntity.getOwnerId())
                 .build();
     }
+
+
 
     @Override
     public ChannelResponse findById(UUID id) {
