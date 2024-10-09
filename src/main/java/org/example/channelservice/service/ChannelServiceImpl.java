@@ -31,8 +31,13 @@ public class ChannelServiceImpl implements ChannelService {
     private final String UPLOAD_DIR = "resources/images";
 
     private final   ChannelRepository channelRepository;
-
     private  final UserServiceClient userServiceClient;
+
+    @Override
+    public ChannelResponse save(ChannelRequest channelRequest, MultipartFile file) {
+        return null;
+    }
+
     @Override
     public ChannelResponse save(ChannelRequest channelRequest, MultipartFile file) {
         UUID ownerId = channelRequest.getOwnerId();
@@ -68,6 +73,8 @@ public class ChannelServiceImpl implements ChannelService {
                 .ownerId(channelEntity.getOwnerId())
                 .build();
     }
+
+
 
     @Override
     public ChannelResponse findById(UUID id) {
