@@ -1,21 +1,19 @@
 package org.example.channelservice.service;
+
+
+
 import lombok.RequiredArgsConstructor;
-import metube.com.dto.response.UserResponse;
 import org.example.channelservice.clients.UserServiceClient;
 import org.example.channelservice.domain.dto.request.ChannelRequest;
 import org.example.channelservice.domain.dto.request.ChannelUpdateRequest;
 import org.example.channelservice.domain.dto.response.ChannelResponse;
+import org.example.channelservice.domain.dto.response.UserResponse;
 import org.example.channelservice.entity.ChannelEntity;
 import org.example.channelservice.exception.BaseException;
 import org.example.channelservice.repository.ChannelRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -24,39 +22,29 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ChannelServiceImpl implements ChannelService {
-    private final ChannelRepository channelRepository;
-    private final UserServiceClient userServiceClient;
-    private final String UPLOAD_DIR = "resources/images";
 
+    private final   ChannelRepository channelRepository;
 
+    private  final UserServiceClient userServiceClient;
     @Override
-    public ChannelResponse save(ChannelRequest channelRequest, MultipartFile imageFile) {
+    public ChannelResponse save(ChannelRequest channelRequest) {
         UUID ownerId = channelRequest.getOwnerId();
 
         if (channelRepository.existsByNickName(channelRequest.getNickName())) {
             throw new BaseException("This nickName already exists", HttpStatus.CONFLICT.value());
         }
 
-        UserResponse userResponse = userServiceClient.findById(ownerId);
+        UserResponse userResponse = userServiceClient.getUser(ownerId);
 
         if(userResponse == null) {
             throw new BaseException("User not found", HttpStatus.NOT_FOUND.value());
         }
 
-        String fileName = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
-        Path filePath = Paths.get(UPLOAD_DIR, fileName);
-
-        try {
-            Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to save image file", e);
-        }
-
         ChannelEntity channelEntity = new ChannelEntity();
         channelEntity.setNickName(channelRequest.getNickName());
         channelEntity.setDescription(channelRequest.getDescription());
-        channelEntity.setImagePath(filePath.toString());
-        channelEntity.setOwnerId(ownerId);
+        channelEntity.setImagePath(channelRequest.getImagePath());
+        channelEntity.setOwnerId(channelRequest.getOwnerId());
         channelRepository.save(channelEntity);
 
         return ChannelResponse.builder().
@@ -79,13 +67,11 @@ public class ChannelServiceImpl implements ChannelService {
                 .build();
     }
 
-
     @Override
     public void delete(UUID id) {
         ChannelResponse response = findById(id);
         channelRepository.deleteById(id);
     }
-
 
     @Override
     public List<ChannelResponse> findAll() {
@@ -114,7 +100,8 @@ public class ChannelServiceImpl implements ChannelService {
 
     @Override
     public List<ChannelResponse> findAllByOwnerId(UUID ownerId) {
-        UserResponse userResponse = userServiceClient.findById(ownerId);
+
+        UserResponse userResponse = userServiceClient.getUser(ownerId);
         if(userResponse == null){
             throw new BaseException("User not found", HttpStatus.NOT_FOUND.value());
         }
@@ -135,7 +122,7 @@ public class ChannelServiceImpl implements ChannelService {
         ChannelEntity channelEntity = channelRepository.findById(channelId)
                 .orElseThrow(() -> new BaseException("Channel not found", HttpStatus.NOT_FOUND.value()));
 
-        UserResponse userResponse = userServiceClient.findById(channelEntity.getOwnerId());
+        UserResponse userResponse = userServiceClient.getUser(channelEntity.getOwnerId());
         if(userResponse == null){
             throw new BaseException("User not found", HttpStatus.NOT_FOUND.value());
         }
@@ -153,8 +140,6 @@ public class ChannelServiceImpl implements ChannelService {
                 .ownerId(channelEntity.getOwnerId())
                 .build();
     }
-
-
 
 
 
