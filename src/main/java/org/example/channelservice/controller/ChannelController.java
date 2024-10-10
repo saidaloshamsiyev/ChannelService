@@ -22,7 +22,7 @@ import java.util.UUID;
 @MultipartConfig(maxFileSize = 10 * 1024 * 1024,
 maxRequestSize = 50 * 1024 * 1024,
 fileSizeThreshold = 10 * 1024)
-public class ChannelController {
+public class    ChannelController {
 
 
     private final   ChannelService channelService;
@@ -54,14 +54,14 @@ public class ChannelController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping
+    @GetMapping("/get-all")
     public ResponseEntity<List<ChannelResponse>> getAllChannels() {
         List<ChannelResponse> channels = channelService.findAll();
         return ResponseEntity.ok(channels);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<ChannelResponse> getChannelByNicknameOrName(@RequestParam String searchValue) {
+    public ResponseEntity<ChannelResponse> getChannelByNicknameOrName(@RequestParam("search") String searchValue) {
         ChannelResponse channel = channelService.findByNicknameOrName(searchValue);
         return ResponseEntity.ok(channel);
     }

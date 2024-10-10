@@ -11,7 +11,6 @@ import java.util.UUID;
 public interface ChannelService {
     ChannelResponse save(ChannelRequest channelRequest, MultipartFile file);
 
-
     ChannelResponse findById(UUID id);
     void delete(UUID id);
     List<ChannelResponse> findAll();
