@@ -1,7 +1,4 @@
 package org.example.channelservice.service;
-
-
-
 import lombok.RequiredArgsConstructor;
 import org.example.channelservice.clients.UserServiceClient;
 import org.example.channelservice.domain.dto.request.ChannelRequest;
@@ -28,15 +25,10 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ChannelServiceImpl implements ChannelService {
-    private final String UPLOAD_DIR = "resources/images";
+    private final String UPLOAD_DIR = "C:\\metube\\ChannelService\\src\\main\\resources";
 
     private final   ChannelRepository channelRepository;
     private  final UserServiceClient userServiceClient;
-
-    @Override
-    public ChannelResponse save(ChannelRequest channelRequest, MultipartFile file) {
-        return null;
-    }
 
     @Override
     public ChannelResponse save(ChannelRequest channelRequest, MultipartFile file) {
@@ -60,6 +52,7 @@ public class ChannelServiceImpl implements ChannelService {
         }
 
         ChannelEntity channelEntity = new ChannelEntity();
+        channelEntity.setName(channelRequest.getName());
         channelEntity.setNickName(channelRequest.getNickName());
         channelEntity.setDescription(channelRequest.getDescription());
         channelEntity.setImagePath(filePath.toString());
@@ -67,6 +60,7 @@ public class ChannelServiceImpl implements ChannelService {
         channelRepository.save(channelEntity);
 
         return ChannelResponse.builder().
+                name(channelEntity.getName()).
                 nickName(channelEntity.getNickName())
                 .description(channelEntity.getDescription())
                 .imagePath(channelEntity.getImagePath())
@@ -97,6 +91,7 @@ public class ChannelServiceImpl implements ChannelService {
     @Override
     public List<ChannelResponse> findAll() {
         return channelRepository.findAll().stream().map(channel -> ChannelResponse.builder()
+                        .name(channel.getName())
                         .nickName(channel.getNickName())
                         .description(channel.getDescription())
                         .imagePath(channel.getImagePath())
@@ -111,6 +106,7 @@ public class ChannelServiceImpl implements ChannelService {
                 .orElseThrow(() -> new BaseException("Channel with this name or nickname not found",
                         HttpStatus.GONE.value()));
         return ChannelResponse.builder()
+                .name(channelEntity.getName())
                 .nickName(channelEntity.getNickName())
                 .description(channelEntity.getDescription())
                 .imagePath(channelEntity.getImagePath())
