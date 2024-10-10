@@ -14,6 +14,7 @@ public class FeignConfig {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = (String) authentication.getPrincipal();
             requestTemplate.header("X-Username",username);
+
         };
     }
 }
