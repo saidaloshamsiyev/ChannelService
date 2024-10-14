@@ -13,9 +13,11 @@ public interface ChannelService {
     ChannelResponse findById(UUID id);
     void delete(UUID id);
     List<ChannelResponse> findAll();
-    ChannelResponse findByNicknameOrName(String name);
+    List<ChannelResponse> findByNicknameOrName(String name);
     List<ChannelResponse> findAllByOwnerId(UUID ownerId);
     ChannelResponse updateChannel(UUID channelId, ChannelUpdateRequest updateRequest);
+    void incrementSubscribeCount(UUID channelId);
+    void decrementSubscribeCount(UUID channelId);
 }
 
 

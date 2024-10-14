@@ -2,7 +2,7 @@ services:
   db:
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1234
+      POSTGRES_PASSWORD: 12345
       POSTGRES_DB: metube
     volumes:
       - ./db-data/var/lib/postgres/data
@@ -16,5 +16,5 @@ services:
     environment:
       DB_HOST: db
       DB_USERNAME: postgres
-      DB_PASSWORD: 1234
+      DB_PASSWORD: 12345
 

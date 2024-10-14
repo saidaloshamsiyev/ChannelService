@@ -65,6 +65,7 @@ public class ChannelServiceImpl implements ChannelService {
                 .description(channelEntity.getDescription())
                 .imagePath(channelEntity.getImagePath())
                 .ownerId(channelEntity.getOwnerId())
+                .subscriberCount(channelEntity.getSubscriberCount())
                 .build();
     }
 
@@ -75,10 +76,12 @@ public class ChannelServiceImpl implements ChannelService {
         ChannelEntity channelEntity = channelRepository.findById(id).orElseThrow(() -> new BaseException("Channel not found",
                 HttpStatus.NOT_FOUND.value()));
         return ChannelResponse.builder()
+                .name(channelEntity.getName())
                 .nickName(channelEntity.getNickName())
                 .description(channelEntity.getDescription())
                 .imagePath(channelEntity.getImagePath())
                 .ownerId(channelEntity.getOwnerId())
+                .subscriberCount(channelEntity.getSubscriberCount())
                 .build();
     }
 
@@ -96,22 +99,29 @@ public class ChannelServiceImpl implements ChannelService {
                         .description(channel.getDescription())
                         .imagePath(channel.getImagePath())
                         .ownerId(channel.getOwnerId())
+                        .subscriberCount(channel.getSubscriberCount())
                         .build())
                 .toList();
     }
 
     @Override
-    public ChannelResponse findByNicknameOrName(String searchValue) {
-        ChannelEntity channelEntity = channelRepository.findByNickNameOrName(searchValue, searchValue)
-                .orElseThrow(() -> new BaseException("Channel with this name or nickname not found",
-                        HttpStatus.GONE.value()));
-        return ChannelResponse.builder()
-                .name(channelEntity.getName())
-                .nickName(channelEntity.getNickName())
-                .description(channelEntity.getDescription())
-                .imagePath(channelEntity.getImagePath())
-                .ownerId(channelEntity.getOwnerId())
-                .build();
+    public List<ChannelResponse> findByNicknameOrName(String searchValue) {
+        List<ChannelEntity> channelEntities = channelRepository
+                .findAllByNickNameContainingIgnoreCaseOrNameContainingIgnoreCase(searchValue, searchValue);
+
+        if (channelEntities.isEmpty()) {
+            throw new BaseException("Channel with this name or nickname not found", HttpStatus.GONE.value());
+        }
+        return channelEntities.stream()
+                .map(channelEntity -> ChannelResponse.builder()
+                        .name(channelEntity.getName())
+                        .nickName(channelEntity.getNickName())
+                        .description(channelEntity.getDescription())
+                        .imagePath(channelEntity.getImagePath())
+                        .ownerId(channelEntity.getOwnerId())
+                        .subscriberCount(channelEntity.getSubscriberCount())
+                        .build())
+                .toList();
     }
 
 
@@ -126,10 +136,12 @@ public class ChannelServiceImpl implements ChannelService {
         List<ChannelEntity> channels = channelRepository.findByOwnerId(ownerId);
         return channels.stream().map(channel ->
                 ChannelResponse.builder()
+                        .name(channel.getName())
                         .nickName(channel.getNickName())
                         .description(channel.getDescription())
                         .imagePath(channel.getImagePath())
                         .ownerId(channel.getOwnerId())
+                        .subscriberCount(channel.getSubscriberCount())
                         .build()
         ).collect(Collectors.toList());
     }
@@ -151,13 +163,41 @@ public class ChannelServiceImpl implements ChannelService {
         channelEntity.setOwnerId(channelEntity.getOwnerId());
         channelRepository.save(channelEntity);
         return ChannelResponse.builder()
+                .name(channelEntity.getName())
                 .nickName(channelEntity.getNickName())
                 .description(channelEntity.getDescription())
                 .imagePath(channelEntity.getImagePath())
                 .ownerId(channelEntity.getOwnerId())
+                .subscriberCount(channelEntity.getSubscriberCount())
                 .build();
     }
 
+    @Override
+    public void incrementSubscribeCount(UUID channelId) {
+        ChannelEntity channel = channelRepository.findById(channelId)
+                .orElseThrow(() -> new BaseException("Channel not found", HttpStatus.NOT_FOUND.value()));
+
+        if (channel.getSubscriberCount() == null) {
+            channel.setSubscriberCount(0);
+        }
+        channel.setSubscriberCount(channel.getSubscriberCount() + 1);
+        channelRepository.save(channel);
+    }
+
+    @Override
+    public void decrementSubscribeCount(UUID channelId) {
+        ChannelEntity channel = channelRepository.findById(channelId)
+                .orElseThrow(() -> new BaseException("Channel not found", HttpStatus.NOT_FOUND.value()));
+
+        if (channel.getSubscriberCount() == null) {
+            channel.setSubscriberCount(0);
+        }
+        if (channel.getSubscriberCount() > 0) {
+            channel.setSubscriberCount(channel.getSubscriberCount() - 1);
+            channelRepository.save(channel);
+        }
+
+    }
 
 
     // this is line for all videos count in one channel's method

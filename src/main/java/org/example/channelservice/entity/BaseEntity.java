@@ -6,13 +6,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
-
+@AllArgsConstructor
+@NoArgsConstructor
 @MappedSuperclass
 @Getter
 @Setter
@@ -22,8 +25,8 @@ public class BaseEntity {
     protected UUID id;
 
     @CreationTimestamp
-    protected LocalDateTime created;
+    protected LocalDateTime createdDate;
 
     @UpdateTimestamp
-    protected LocalDateTime modified;
+    protected LocalDateTime updatedDate;
 }
