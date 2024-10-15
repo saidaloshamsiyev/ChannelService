@@ -43,7 +43,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         subscriptionEntity.setSubscriberId(subscriptionRequest.getSubscriberId());
         subscriptionEntity.setChannelId(subscriptionRequest.getChannelId());
         subscriptionRepository.save(subscriptionEntity);
-
+         channelService.incrementSubscribeCount(subscriptionRequest.getChannelId());
         return SubscriptionResponse.builder()
                 .subscriberId(subscriptionEntity.getSubscriberId())
                 .channelId(subscriptionEntity.getChannelId())
@@ -84,8 +84,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             throw new BaseException("Subscription not found", HttpStatus.NOT_FOUND.value());
         }
         return SubscriptionResponse.builder()
-                .channelId(subscriptionEntityList.getFirst().getChannelId())
-                .subscriberId(subscriptionEntityList.getFirst().getChannelId())
+                .channelId(subscriptionEntityList.get(1).getChannelId())
+                .subscriberId(subscriptionEntityList.get(1).getChannelId())
                 .build();
     }
 
