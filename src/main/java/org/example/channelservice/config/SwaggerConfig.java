@@ -14,6 +14,7 @@ public class SwaggerConfig {
     public OpenAPI customOpenAPI() {
         final String securitySchemeName = "bearerAuth";
         return new OpenAPI()
+
                 .info(new Info()
                         .title("Channel Service API")
                         .version("1.0")
