@@ -30,8 +30,7 @@ public class    ChannelController {
     @PostMapping(value = "/create")
     public ResponseEntity<ChannelResponse> createChannel(
             @RequestPart("imageFile") MultipartFile imageFile,
-            @RequestPart("jsonData") ChannelRequest channelRequest
-            ) {
+            @RequestPart("jsonData") ChannelRequest channelRequest) {
         ChannelResponse savedChannel = channelService.save(channelRequest, imageFile);
         return new ResponseEntity<>(savedChannel, HttpStatus.CREATED);
     }
@@ -42,13 +41,13 @@ public class    ChannelController {
         return ResponseEntity.ok(channel);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<ChannelResponse> updateChannel(@PathVariable UUID id, @RequestBody ChannelUpdateRequest updateRequest) {
         ChannelResponse updatedChannel = channelService.updateChannel(id, updateRequest);
         return ResponseEntity.ok(updatedChannel);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteChannel(@PathVariable UUID id) {
         channelService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -59,12 +58,12 @@ public class    ChannelController {
         List<ChannelResponse> channels = channelService.findAll();
         return ResponseEntity.ok(channels);
     }
-
     @GetMapping("/search")
-    public ResponseEntity<ChannelResponse> getChannelByNicknameOrName(@RequestParam("search") String searchValue) {
-        ChannelResponse channel = channelService.findByNicknameOrName(searchValue);
-        return ResponseEntity.ok(channel);
+    public ResponseEntity<List<ChannelResponse>> getChannelsByNicknameOrName(@RequestParam("search") String searchValue) {
+        List<ChannelResponse> channels = channelService.findByNicknameOrName(searchValue);
+        return ResponseEntity.ok(channels);
     }
+
 
     @GetMapping("/owner/{ownerId}")
     public ResponseEntity<List<ChannelResponse>> getAllChannelsByOwnerId(@PathVariable UUID ownerId) {

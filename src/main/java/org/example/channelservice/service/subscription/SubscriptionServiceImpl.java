@@ -43,7 +43,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         subscriptionEntity.setSubscriberId(subscriptionRequest.getSubscriberId());
         subscriptionEntity.setChannelId(subscriptionRequest.getChannelId());
         subscriptionRepository.save(subscriptionEntity);
-
+         channelService.incrementSubscribeCount(subscriptionRequest.getChannelId());
         return SubscriptionResponse.builder()
                 .subscriberId(subscriptionEntity.getSubscriberId())
                 .channelId(subscriptionEntity.getChannelId())
