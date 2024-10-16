@@ -13,3 +13,4 @@ public interface SubscriptionService {
     void delete(UUID id);
     SubscriptionResponse findAllSubsBySubsId(UUID userId);
 }
+
