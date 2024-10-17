@@ -28,6 +28,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers(WHITE_LIST).permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/auth/**").authenticated()
                                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(new CustomFilter(),
