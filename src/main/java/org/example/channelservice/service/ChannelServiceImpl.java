@@ -18,6 +18,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -135,28 +136,23 @@ public class ChannelServiceImpl implements ChannelService {
             throw new BaseException("This nickName already exists", HttpStatus.CONFLICT.value());
         }
 
-
         UserResponse userResponse = userServiceClient.getUser(ownerId);
         if (userResponse == null) {
             throw new BaseException("User not found", HttpStatus.NOT_FOUND.value());
         }
 
-
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-
 
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(fileName)
                 .build();
 
-
-        try {
-            s3Client.putObject(putObjectRequest, RequestBody.fromBytes(file.getBytes()));
+        try (InputStream inputStream = file.getInputStream()) {
+            s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(inputStream, file.getSize()));
         } catch (IOException e) {
             throw new RuntimeException("Failed to upload file to S3", e);
         }
-
 
         ChannelEntity channelEntity = new ChannelEntity();
         channelEntity.setName(channelRequest.getName());
@@ -165,7 +161,6 @@ public class ChannelServiceImpl implements ChannelService {
         channelEntity.setImagePath(fileName);
         channelEntity.setOwnerId(ownerId);
         channelRepository.save(channelEntity);
-
 
         return ChannelResponse.builder()
                 .name(channelEntity.getName())
@@ -176,6 +171,7 @@ public class ChannelServiceImpl implements ChannelService {
                 .subscriberCount(channelEntity.getSubscriberCount())
                 .build();
     }
+
 
 
     @Override
