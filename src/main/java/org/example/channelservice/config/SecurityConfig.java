@@ -1,5 +1,6 @@
 package org.example.channelservice.config;
 
+import jakarta.ws.rs.HttpMethod;
 import org.example.channelservice.filter.CustomFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,9 +32,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers(WHITE_LIST).permitAll()
-/*
                                 .requestMatchers(HttpMethod.POST, "/api/auth/**").authenticated()
-*/
                                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(new CustomFilter(),
