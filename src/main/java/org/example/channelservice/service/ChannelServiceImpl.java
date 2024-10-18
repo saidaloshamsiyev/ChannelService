@@ -1,4 +1,5 @@
 package org.example.channelservice.service;
+
 import lombok.RequiredArgsConstructor;
 import org.example.channelservice.clients.UserServiceClient;
 import org.example.channelservice.domain.dto.request.ChannelRequest;
@@ -8,11 +9,16 @@ import org.example.channelservice.domain.dto.response.UserResponse;
 import org.example.channelservice.entity.ChannelEntity;
 import org.example.channelservice.exception.BaseException;
 import org.example.channelservice.repository.ChannelRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,11 +31,17 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ChannelServiceImpl implements ChannelService {
-    private final String UPLOAD_DIR = "C:\\metube\\ChannelService\\src\\main\\resources";
 
-    private final   ChannelRepository channelRepository;
-    private  final UserServiceClient userServiceClient;
+    private final ChannelRepository channelRepository;
+    private final UserServiceClient userServiceClient;
 
+    private final S3Client s3Client;
+
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucketName;
+
+    @Value("${cloud.aws.region.static}")
+    private String region;
 
     @Override
     public ChannelResponse save(ChannelRequest channelRequest, MultipartFile file) {
@@ -74,7 +86,95 @@ public class ChannelServiceImpl implements ChannelService {
 
     }
 
+   /* @Override
+    public ChannelResponse save(ChannelRequest channelRequest, MultipartFile file) {
+        UUID ownerId = channelRequest.getOwnerId();
 
+        if (channelRepository.existsByNickName(channelRequest.getNickName())) {
+            throw new BaseException("This nickName already exists", HttpStatus.CONFLICT.value());
+        }
+
+        UserResponse userResponse = userServiceClient.getUser(ownerId);
+
+        if (userResponse == null) {
+            throw new BaseException("User not found", HttpStatus.NOT_FOUND.value());
+        }
+
+        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+
+        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key(file.getOriginalFilename())
+                .build();
+
+        try {
+            s3Client.putObject(putObjectRequest, RequestBody.fromBytes(file.getBytes()));
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to upload file to S3", e);
+        }
+
+        ChannelEntity channelEntity = new ChannelEntity();
+        channelEntity.setName(channelRequest.getName());
+        channelEntity.setNickName(channelRequest.getNickName());
+        channelEntity.setDescription(channelRequest.getDescription());
+        channelEntity.setImagePath(fileName);
+        channelEntity.setOwnerId(ownerId);
+        channelRepository.save(channelEntity);
+
+        return ChannelResponse.builder()
+                .name(channelEntity.getName())
+                .nickName(channelEntity.getNickName())
+                .description(channelEntity.getDescription())
+                .imagePath("https://" + bucketName + "." + region + ".digitaloceanspaces.com/" + fileName)
+                .ownerId(channelEntity.getOwnerId())
+                .subscriberCount(channelEntity.getSubscriberCount())
+                .build();
+
+    }*/
+
+  /*  @Override
+    public ChannelResponse save(ChannelRequest channelRequest, MultipartFile file) {
+        UUID ownerId = channelRequest.getOwnerId();
+
+        if (channelRepository.existsByNickName(channelRequest.getNickName())) {
+            throw new BaseException("This nickName already exists", HttpStatus.CONFLICT.value());
+        }
+
+        UserResponse userResponse = userServiceClient.getUser(ownerId);
+        if (userResponse == null) {
+            throw new BaseException("User not found", HttpStatus.NOT_FOUND.value());
+        }
+
+        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+
+        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key(fileName)
+                .build();
+
+        try (InputStream inputStream = file.getInputStream()) {
+            s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(inputStream, file.getSize()));
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to upload file to S3", e);
+        }
+
+        ChannelEntity channelEntity = new ChannelEntity();
+        channelEntity.setName(channelRequest.getName());
+        channelEntity.setNickName(channelRequest.getNickName());
+        channelEntity.setDescription(channelRequest.getDescription());
+        channelEntity.setImagePath(fileName);
+        channelEntity.setOwnerId(ownerId);
+        channelRepository.save(channelEntity);
+
+        return ChannelResponse.builder()
+                .name(channelEntity.getName())
+                .nickName(channelEntity.getNickName())
+                .description(channelEntity.getDescription())
+                .imagePath("https://" + bucketName + "." + region + ".digitaloceanspaces.com/" + fileName)
+                .ownerId(channelEntity.getOwnerId())
+                .subscriberCount(channelEntity.getSubscriberCount())
+                .build();
+    }*/
 
 
 
@@ -136,7 +236,7 @@ public class ChannelServiceImpl implements ChannelService {
     public List<ChannelResponse> findAllByOwnerId(UUID ownerId) {
 
         UserResponse userResponse = userServiceClient.getUser(ownerId);
-        if(userResponse == null){
+        if (userResponse == null) {
             throw new BaseException("User not found", HttpStatus.NOT_FOUND.value());
         }
 
@@ -159,7 +259,7 @@ public class ChannelServiceImpl implements ChannelService {
                 .orElseThrow(() -> new BaseException("Channel not found", HttpStatus.NOT_FOUND.value()));
 
         UserResponse userResponse = userServiceClient.getUser(channelEntity.getOwnerId());
-        if(userResponse == null){
+        if (userResponse == null) {
             throw new BaseException("User not found", HttpStatus.NOT_FOUND.value());
         }
 
@@ -208,12 +308,6 @@ public class ChannelServiceImpl implements ChannelService {
 
 
     // this is line for all videos count in one channel's method
-
-
-
-
-
-
 
 
 }

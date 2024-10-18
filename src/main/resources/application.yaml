@@ -1,14 +1,13 @@
 server:
   port: 8085
 
-
 spring:
   application:
     name: CHANNEL-SERVICE
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:5432/metube
     username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:12345}
+    password: ${DB_PASSWORD:1234}
   jpa:
     hibernate:
       ddl-auto: update
@@ -37,3 +36,15 @@ logging:
   level:
     org.springframework.web: DEBUG
     org.springframework.security: DEBUG
+
+
+cloud:
+  aws:
+    credentials:
+      accessKey: AKIA6GBMGGFRCYJEPOLK
+      secretKey: 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
+    region:
+      static: EU_NORTH_1
+    s3:
+      bucket: metube-bucket
+
