@@ -1,20 +1,18 @@
 package org.example.channelservice.controller;
+
 import jakarta.servlet.annotation.MultipartConfig;
 import lombok.RequiredArgsConstructor;
-import org.apache.hc.core5.http.ContentType;
 import org.example.channelservice.domain.dto.request.ChannelRequest;
 import org.example.channelservice.domain.dto.request.ChannelUpdateRequest;
 import org.example.channelservice.domain.dto.response.ChannelResponse;
 import org.example.channelservice.service.ChannelService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 import java.util.UUID;
-
 
 @RestController
 @RequestMapping("/api/channel")
@@ -22,11 +20,9 @@ import java.util.UUID;
 @MultipartConfig(maxFileSize = 10 * 1024 * 1024,
 maxRequestSize = 50 * 1024 * 1024,
 fileSizeThreshold = 10 * 1024)
-public class    ChannelController {
+public class ChannelController {
 
-
-    private final   ChannelService channelService;
-
+    private final ChannelService channelService;
     @PostMapping(value = "/create")
     public ResponseEntity<ChannelResponse> createChannel(
             @RequestPart("imageFile") MultipartFile imageFile,
@@ -34,6 +30,8 @@ public class    ChannelController {
         ChannelResponse savedChannel = channelService.save(channelRequest, imageFile);
         return new ResponseEntity<>(savedChannel, HttpStatus.CREATED);
     }
+
+
 
     @GetMapping("/{id}")
     public ResponseEntity<ChannelResponse> getChannelById(@PathVariable UUID id) {

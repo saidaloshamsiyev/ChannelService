@@ -1,7 +1,7 @@
 package org.example.channelservice.config;
 
-import jakarta.ws.rs.HttpMethod;
 import org.example.channelservice.filter.CustomFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,9 +13,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig {
-
-
-    private final String[] WHITE_LIST = {"/api/auth/login", "/api/auth/register",
+    private final String[] WHITE_LIST = {
             "/api/auth/swagger-ui/**",
             "/api/auth/v3/api-docs/**",
             "/api/channel/swagger-ui/**",

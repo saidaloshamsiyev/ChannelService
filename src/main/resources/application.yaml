@@ -2,12 +2,16 @@ server:
   port: 8085
 
 spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 50MB
   application:
     name: CHANNEL-SERVICE
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:5432/metube
     username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:1234}
+    password: ${DB_PASSWORD:12345}
   jpa:
     hibernate:
       ddl-auto: update
@@ -16,6 +20,8 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+
 
 eureka:
   client:
@@ -47,4 +53,9 @@ cloud:
       static: EU_NORTH_1
     s3:
       bucket: metube-bucket
+
+jwt:
+  secret: qwefklsdfj3roif134adsj14fdslkjf1234fiodwq
+  accessTokenExpiration: 3600000
+  refreshTokenExpiration: 86400000
 

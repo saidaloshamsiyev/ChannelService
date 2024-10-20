@@ -17,6 +17,17 @@ public class FeignConfig {
 
         };
     }
+//@Bean
+//public RequestInterceptor requestInterceptor() {
+//    return requestTemplate -> {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if (authentication != null && authentication.getPrincipal() instanceof String) {
+//            String username = (String) authentication.getPrincipal();
+//            requestTemplate.header("X-Username", username);
+//        }
+//    };
+//}
+
 }
 
 

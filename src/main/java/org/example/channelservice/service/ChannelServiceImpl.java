@@ -86,6 +86,53 @@ public class ChannelServiceImpl implements ChannelService {
 
     }
 
+//    @Override
+//    public ChannelResponse save(ChannelRequest channelRequest, MultipartFile file) {
+//        UUID ownerId = channelRequest.getOwnerId();
+//
+//        if (channelRepository.existsByNickName(channelRequest.getNickName())) {
+//            throw new BaseException("This nickName already exists", HttpStatus.CONFLICT.value());
+//        }
+//
+//        UserResponse userResponse = userServiceClient.getUser(ownerId);
+//        if (userResponse == null) {
+//            throw new BaseException("User not found", HttpStatus.NOT_FOUND.value());
+//        }
+//
+//        // Fayl bo'lmagan holatda imagePath ni to'g'rilash
+//        String imagePath = null; // default value
+//        if (file != null && !file.isEmpty()) {
+//            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+//            String UPLOAD_DIR = "C:\\metube\\ChannelService\\src\\main\\resources";
+//            Path filePath = Paths.get(UPLOAD_DIR, fileName);
+//
+//            try {
+//                Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+//                imagePath = filePath.toString(); // Fayl muvaffaqiyatli saqlangan bo'lsa, imagePath ni o'rnatish
+//            } catch (IOException e) {
+//                throw new RuntimeException("Failed to save image file", e);
+//            }
+//        }
+//
+//        ChannelEntity channelEntity = new ChannelEntity();
+//        channelEntity.setName(channelRequest.getName());
+//        channelEntity.setNickName(channelRequest.getNickName());
+//        channelEntity.setDescription(channelRequest.getDescription());
+//        channelEntity.setImagePath(imagePath); // Fayl yo'lini qo'yish
+//        channelEntity.setOwnerId(ownerId);
+//        channelRepository.save(channelEntity);
+//
+//        return ChannelResponse.builder()
+//                .name(channelEntity.getName())
+//                .nickName(channelEntity.getNickName())
+//                .description(channelEntity.getDescription())
+//                .imagePath(channelEntity.getImagePath())
+//                .ownerId(channelEntity.getOwnerId())
+//                .subscriberCount(channelEntity.getSubscriberCount())
+//                .build();
+//    }
+
+
    /* @Override
     public ChannelResponse save(ChannelRequest channelRequest, MultipartFile file) {
         UUID ownerId = channelRequest.getOwnerId();
