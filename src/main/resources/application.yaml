@@ -23,6 +23,7 @@ spring:
 
 
 
+
 eureka:
   client:
     service-url:
@@ -47,10 +48,13 @@ logging:
 cloud:
   aws:
     credentials:
-      accessKey: AKIA6GBMGGFRCYJEPOLK
-      secretKey: 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
+      accessKey: AKIA6GBMGGFRG54EE3UK
+      secretKey: 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
     region:
       static: EU_NORTH_1
     s3:
-      bucket: metube-bucket
+      bucket: metube-bucket-mic
 
+
+jwt:
+  secret: qwefklsdfj3roif134adsj14fdslkjf1234fiodwq

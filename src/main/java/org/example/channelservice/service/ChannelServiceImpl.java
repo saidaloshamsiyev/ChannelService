@@ -1,5 +1,6 @@
 package org.example.channelservice.service;
 
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.example.channelservice.clients.UserServiceClient;
 import org.example.channelservice.domain.dto.request.ChannelRequest;
@@ -10,6 +11,7 @@ import org.example.channelservice.entity.ChannelEntity;
 import org.example.channelservice.exception.BaseException;
 import org.example.channelservice.repository.ChannelRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,7 +45,7 @@ public class ChannelServiceImpl implements ChannelService {
     @Value("${cloud.aws.region.static}")
     private String region;
 
-    @Override
+    /*@Override
     public ChannelResponse save(ChannelRequest channelRequest, MultipartFile file) {
         UUID ownerId = channelRequest.getOwnerId();
 
@@ -51,11 +53,17 @@ public class ChannelServiceImpl implements ChannelService {
             throw new BaseException("This nickName already exists", HttpStatus.CONFLICT.value());
         }
 
-        UserResponse userResponse = userServiceClient.getUser(ownerId);
+        try {
+            UserResponse userResponse = userServiceClient.getUser(ownerId);
 
-        if(userResponse == null) {
-            throw new BaseException("User not found", HttpStatus.NOT_FOUND.value());
+            if (userResponse == null) {
+                throw new BaseException("User not found", HttpStatus.NOT_FOUND.value());
+            }
+        } catch (FeignException.Forbidden e) {
+
+            throw new BaseException("Foydalanuvchini olishga ruxsat etilmagan.", 403);
         }
+
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
 
         String UPLOAD_DIR = "C:\\metube\\ChannelService\\src\\main\\resources";
@@ -84,126 +92,39 @@ public class ChannelServiceImpl implements ChannelService {
                 .subscriberCount(channelEntity.getSubscriberCount())
                 .build();
 
-    }
-
-//    @Override
-//    public ChannelResponse save(ChannelRequest channelRequest, MultipartFile file) {
-//        UUID ownerId = channelRequest.getOwnerId();
-//
-//        if (channelRepository.existsByNickName(channelRequest.getNickName())) {
-//            throw new BaseException("This nickName already exists", HttpStatus.CONFLICT.value());
-//        }
-//
-//        UserResponse userResponse = userServiceClient.getUser(ownerId);
-//        if (userResponse == null) {
-//            throw new BaseException("User not found", HttpStatus.NOT_FOUND.value());
-//        }
-//
-//        // Fayl bo'lmagan holatda imagePath ni to'g'rilash
-//        String imagePath = null; // default value
-//        if (file != null && !file.isEmpty()) {
-//            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-//            String UPLOAD_DIR = "C:\\metube\\ChannelService\\src\\main\\resources";
-//            Path filePath = Paths.get(UPLOAD_DIR, fileName);
-//
-//            try {
-//                Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-//                imagePath = filePath.toString(); // Fayl muvaffaqiyatli saqlangan bo'lsa, imagePath ni o'rnatish
-//            } catch (IOException e) {
-//                throw new RuntimeException("Failed to save image file", e);
-//            }
-//        }
-//
-//        ChannelEntity channelEntity = new ChannelEntity();
-//        channelEntity.setName(channelRequest.getName());
-//        channelEntity.setNickName(channelRequest.getNickName());
-//        channelEntity.setDescription(channelRequest.getDescription());
-//        channelEntity.setImagePath(imagePath); // Fayl yo'lini qo'yish
-//        channelEntity.setOwnerId(ownerId);
-//        channelRepository.save(channelEntity);
-//
-//        return ChannelResponse.builder()
-//                .name(channelEntity.getName())
-//                .nickName(channelEntity.getNickName())
-//                .description(channelEntity.getDescription())
-//                .imagePath(channelEntity.getImagePath())
-//                .ownerId(channelEntity.getOwnerId())
-//                .subscriberCount(channelEntity.getSubscriberCount())
-//                .build();
-//    }
-
-
-   /* @Override
-    public ChannelResponse save(ChannelRequest channelRequest, MultipartFile file) {
-        UUID ownerId = channelRequest.getOwnerId();
-
-        if (channelRepository.existsByNickName(channelRequest.getNickName())) {
-            throw new BaseException("This nickName already exists", HttpStatus.CONFLICT.value());
-        }
-
-        UserResponse userResponse = userServiceClient.getUser(ownerId);
-
-        if (userResponse == null) {
-            throw new BaseException("User not found", HttpStatus.NOT_FOUND.value());
-        }
-
-        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-
-        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                .bucket(bucketName)
-                .key(file.getOriginalFilename())
-                .build();
-
-        try {
-            s3Client.putObject(putObjectRequest, RequestBody.fromBytes(file.getBytes()));
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to upload file to S3", e);
-        }
-
-        ChannelEntity channelEntity = new ChannelEntity();
-        channelEntity.setName(channelRequest.getName());
-        channelEntity.setNickName(channelRequest.getNickName());
-        channelEntity.setDescription(channelRequest.getDescription());
-        channelEntity.setImagePath(fileName);
-        channelEntity.setOwnerId(ownerId);
-        channelRepository.save(channelEntity);
-
-        return ChannelResponse.builder()
-                .name(channelEntity.getName())
-                .nickName(channelEntity.getNickName())
-                .description(channelEntity.getDescription())
-                .imagePath("https://" + bucketName + "." + region + ".digitaloceanspaces.com/" + fileName)
-                .ownerId(channelEntity.getOwnerId())
-                .subscriberCount(channelEntity.getSubscriberCount())
-                .build();
-
     }*/
 
-  /*  @Override
+    @Override
     public ChannelResponse save(ChannelRequest channelRequest, MultipartFile file) {
         UUID ownerId = channelRequest.getOwnerId();
+
 
         if (channelRepository.existsByNickName(channelRequest.getNickName())) {
             throw new BaseException("This nickName already exists", HttpStatus.CONFLICT.value());
         }
+
 
         UserResponse userResponse = userServiceClient.getUser(ownerId);
         if (userResponse == null) {
             throw new BaseException("User not found", HttpStatus.NOT_FOUND.value());
         }
 
+
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+
 
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(fileName)
                 .build();
 
-        try (InputStream inputStream = file.getInputStream()) {
-            s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(inputStream, file.getSize()));
+        try {
+
+            s3Client.putObject(putObjectRequest, RequestBody.fromBytes(file.getBytes()));
         } catch (IOException e) {
             throw new RuntimeException("Failed to upload file to S3", e);
         }
+
 
         ChannelEntity channelEntity = new ChannelEntity();
         channelEntity.setName(channelRequest.getName());
@@ -213,16 +134,16 @@ public class ChannelServiceImpl implements ChannelService {
         channelEntity.setOwnerId(ownerId);
         channelRepository.save(channelEntity);
 
+
         return ChannelResponse.builder()
                 .name(channelEntity.getName())
                 .nickName(channelEntity.getNickName())
                 .description(channelEntity.getDescription())
-                .imagePath("https://" + bucketName + "." + region + ".digitaloceanspaces.com/" + fileName)
+                .imagePath("https://" + bucketName + "." + region + ".digitaloceanspaces.com/" + fileName)  // To'liq URL
                 .ownerId(channelEntity.getOwnerId())
                 .subscriberCount(channelEntity.getSubscriberCount())
                 .build();
-    }*/
-
+    }
 
 
     @Override

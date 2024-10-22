@@ -32,6 +32,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers(WHITE_LIST).permitAll()
+                                .requestMatchers("/api/channel/**").authenticated()
                                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(new CustomFilter(),

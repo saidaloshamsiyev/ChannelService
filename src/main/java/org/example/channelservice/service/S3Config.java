@@ -1,4 +1,4 @@
-package org.example.channelservice.service.subscription;
+package org.example.channelservice.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
