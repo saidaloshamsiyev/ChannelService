@@ -1,6 +1,4 @@
 package org.example.channelservice.service;
-
-import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.example.channelservice.clients.UserServiceClient;
 import org.example.channelservice.domain.dto.request.ChannelRequest;
@@ -11,7 +9,7 @@ import org.example.channelservice.entity.ChannelEntity;
 import org.example.channelservice.exception.BaseException;
 import org.example.channelservice.repository.ChannelRepository;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.openfeign.FeignClient;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,11 +18,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -162,7 +156,6 @@ public class ChannelServiceImpl implements ChannelService {
 
     @Override
     public void delete(UUID id) {
-        ChannelResponse response = findById(id);
         channelRepository.deleteById(id);
     }
 
