@@ -22,10 +22,6 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -47,7 +43,7 @@ public class ChannelServiceImpl implements ChannelService {
     @Value("${cloud.aws.region.static}")
     private String region;
 
-    @Override
+   /* @Override
     public ChannelResponse save(ChannelRequest channelRequest, MultipartFile file) {
         UUID ownerId = channelRequest.getOwnerId();
 
@@ -96,9 +92,9 @@ public class ChannelServiceImpl implements ChannelService {
                 .subscriberCount(channelEntity.getSubscriberCount())
                 .build();
 
-    }
+    }*/
 
-  /*  @Override
+    @Override
     public ChannelResponse save(ChannelRequest channelRequest, MultipartFile file) {
         UUID ownerId = channelRequest.getOwnerId();
 
@@ -138,7 +134,11 @@ public class ChannelServiceImpl implements ChannelService {
         channelEntity.setOwnerId(ownerId);
         channelRepository.save(channelEntity);
 
+
+/*
         channelProducer.produce("channel",new UserNotificationRequest(channelEntity.getDescription(),"channel create"));
+*/
+
 
 
         return ChannelResponse.builder()
@@ -149,7 +149,7 @@ public class ChannelServiceImpl implements ChannelService {
                 .ownerId(channelEntity.getOwnerId())
                 .subscriberCount(channelEntity.getSubscriberCount())
                 .build();
-    }*/
+    }
 
 
     @Override
