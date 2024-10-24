@@ -43,56 +43,7 @@ public class ChannelServiceImpl implements ChannelService {
     @Value("${cloud.aws.region.static}")
     private String region;
 
-   /* @Override
-    public ChannelResponse save(ChannelRequest channelRequest, MultipartFile file) {
-        UUID ownerId = channelRequest.getOwnerId();
 
-        if (channelRepository.existsByNickName(channelRequest.getNickName())) {
-            throw new BaseException("This nickName already exists", HttpStatus.CONFLICT.value());
-        }
-
-        try {
-            UserResponse userResponse = userServiceClient.getUser(ownerId);
-
-            if (userResponse == null) {
-                throw new BaseException("User not found", HttpStatus.NOT_FOUND.value());
-            }
-        } catch (FeignException.Forbidden e) {
-
-            throw new BaseException("Foydalanuvchini olishga ruxsat etilmagan.", 403);
-        }
-
-        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-
-        String UPLOAD_DIR = "C:\\metube\\ChannelService\\src\\main\\resources";
-
-        Path filePath = Paths.get(UPLOAD_DIR, fileName);
-        try {
-            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to save image file", e);
-        }
-
-        ChannelEntity channelEntity = new ChannelEntity();
-        channelEntity.setName(channelRequest.getName());
-        channelEntity.setNickName(channelRequest.getNickName());
-        channelEntity.setDescription(channelRequest.getDescription());
-        channelEntity.setImagePath(filePath.toString());
-        channelEntity.setOwnerId(ownerId);
-        channelRepository.save(channelEntity);
-
-        channelProducer.produce("channel",new UserNotificationRequest(channelEntity.getDescription(),"channel create"));
-
-        return ChannelResponse.builder().
-                name(channelEntity.getName()).
-                nickName(channelEntity.getNickName())
-                .description(channelEntity.getDescription())
-                .imagePath(channelEntity.getImagePath())
-                .ownerId(channelEntity.getOwnerId())
-                .subscriberCount(channelEntity.getSubscriberCount())
-                .build();
-
-    }*/
 
     @Override
     public ChannelResponse save(ChannelRequest channelRequest, MultipartFile file) {
