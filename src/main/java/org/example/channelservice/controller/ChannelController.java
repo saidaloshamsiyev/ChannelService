@@ -27,6 +27,8 @@ public class ChannelController {
     public ResponseEntity<ChannelResponse> createChannel(
             @RequestPart("imageFile") MultipartFile imageFile,
             @RequestPart("jsonData") ChannelRequest channelRequest) {
+        System.out.println(imageFile.getOriginalFilename());
+        System.out.println("Hello old controller!");
         ChannelResponse savedChannel = channelService.save(channelRequest, imageFile);
         return new ResponseEntity<>(savedChannel, HttpStatus.CREATED);
     }

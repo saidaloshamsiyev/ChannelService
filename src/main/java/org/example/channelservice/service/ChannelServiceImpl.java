@@ -49,6 +49,9 @@ public class ChannelServiceImpl implements ChannelService {
     public ChannelResponse save(ChannelRequest channelRequest, MultipartFile file) {
         UUID ownerId = channelRequest.getOwnerId();
 
+        System.out.println(file.getOriginalFilename());
+        System.out.println("Hello old!");
+
         if (file == null || file.isEmpty()) {
             throw new BaseException("Uploaded file is empty", HttpStatus.BAD_REQUEST.value());
         }
