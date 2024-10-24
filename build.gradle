@@ -78,4 +78,7 @@ dependencyManagement {
 tasks.named('test') {
     useJUnitPlatform()
 
+    doLast {
+        println version
+    }
 }

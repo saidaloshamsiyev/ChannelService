@@ -43,7 +43,13 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       # Step 6: Build and push Docker image saidalo
+#      - name: Build and push Docker image
+#        run: |
+#          docker build -t ${{ secrets.DOCKER_USERNAME }}/channel-service:latest .
+#          docker push ${{ secrets.DOCKER_USERNAME }}/channel-service:latest
+
+
       - name: Build and push Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/channel-service:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/channel-service:latest
+            docker build -t ${{ secrets.DOCKER_USERNAME }}/channel-service:${{ env.VERSION }} .
+            docker push ${{ secrets.DOCKER_USERNAME }}/channel-service:${{ env.VERSION }}
