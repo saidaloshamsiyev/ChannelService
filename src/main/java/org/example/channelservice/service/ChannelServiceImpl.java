@@ -98,6 +98,10 @@ public class ChannelServiceImpl implements ChannelService {
     public ChannelResponse save(ChannelRequest channelRequest, MultipartFile file) {
         UUID ownerId = channelRequest.getOwnerId();
 
+        if (file == null || file.isEmpty()) {
+            throw new BaseException("Uploaded file is empty", HttpStatus.BAD_REQUEST.value());
+        }
+
 
         if (channelRepository.existsByNickName(channelRequest.getNickName())) {
             throw new BaseException("This nickName already exists", HttpStatus.CONFLICT.value());
