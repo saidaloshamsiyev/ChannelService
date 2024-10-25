@@ -54,7 +54,7 @@ jobs:
           docker build -t ${{ secrets.DOCKER_USERNAME }}/channel-service1:${{ env.VERSION }} .
           docker push ${{ secrets.DOCKER_USERNAME }}/channel-service1:${{ env.VERSION }}
           
-          # Step 8: Deploy with Docker Compose
+        # Step 8: Deploy with Docker Compose
       - name: Deploy Docker Compose
         run: |
           docker-compose -f docker-compose.yml up -d
