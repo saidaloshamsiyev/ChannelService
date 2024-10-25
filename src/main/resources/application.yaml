@@ -12,10 +12,10 @@ spring:
   application:
     name: CHANNEL-SERVICE
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:5432/metube
+    url: jdbc:postgresql://${DB_HOST:localhost}:5432/metube_local
 
     username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:8463}
+    password: ${DB_PASSWORD:1234}
   jpa:
     hibernate:
       ddl-auto: update
@@ -26,11 +26,11 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
 
-#  kafka:
-#    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:broker:29092}
-#    producer:
-#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-#      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:broker:29092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
 eureka:
   client:
