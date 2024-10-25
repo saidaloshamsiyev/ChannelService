@@ -43,9 +43,10 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
 
-        # Step 6: Set the VERSION dynamically
+          # Step 6: Set the VERSION dynamically
       - name: Set version
         run: echo "VERSION=${{ github.run_number }}" >> $GITHUB_ENV
+
 
 
         # Step 7: Build and push Docker image
@@ -53,13 +54,15 @@ jobs:
         run: |
           docker build -t ${{ secrets.DOCKER_USERNAME }}/channel-service1:${{ env.VERSION }} .
           docker push ${{ secrets.DOCKER_USERNAME }}/channel-service1:${{ env.VERSION }}
-          
+
         # Step 8: Deploy with Docker Compose
       - name: Deploy Docker Compose
         run: |
           docker-compose -f docker-compose.yml up -d
         env:
-        CHANNEL_SERVICE_VERSION: ${{ env.VERSION }}
+         CHANNEL_SERVICE_VERSION: ${{ env.VERSION }}
+      
+      
 
       #      # Step 6: Build and push Docker image saidalo
       #      - name: Build and push Docker image
