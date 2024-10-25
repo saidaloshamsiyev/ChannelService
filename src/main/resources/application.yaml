@@ -48,15 +48,7 @@ logging:
     org.springframework.security: DEBUG
 
 
-#cloud:
-#  aws:
-#    credentials:
-#      accessKey: AKIA6GBMGGFRI3DD7TH4
-#      secretKey: 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
-#    region:
-#      static: us-east-1
-#    s3:
-#      bucket: my-team-bucket-b30
+
 
 
 cloud:
