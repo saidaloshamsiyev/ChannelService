@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/channel")
-@RequiredArgsConstructor()
+@RequiredArgsConstructor
 @MultipartConfig(maxFileSize = 10 * 1024 * 1024,
 maxRequestSize = 50 * 1024 * 1024,
 fileSizeThreshold = 10 * 1024)
