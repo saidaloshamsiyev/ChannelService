@@ -2,6 +2,7 @@ package org.example.channelservice.service;
 
 import lombok.RequiredArgsConstructor;
 
+import metube.com.dto.request.UserNotificationRequest;
 import org.example.channelservice.clients.UserServiceClient;
 import org.example.channelservice.domain.dto.request.ChannelRequest;
 import org.example.channelservice.domain.dto.request.ChannelUpdateRequest;
@@ -10,6 +11,7 @@ import org.example.channelservice.domain.dto.response.UserResponse;
 import org.example.channelservice.entity.ChannelEntity;
 import org.example.channelservice.exception.BaseException;
 
+import org.example.channelservice.kafka.ChannelProducer;
 import org.example.channelservice.repository.ChannelRepository;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -31,6 +33,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ChannelServiceImpl implements ChannelService {
 
+    private final ChannelProducer channelProducer;
     private final ChannelRepository channelRepository;
     private final UserServiceClient userServiceClient;
     private final S3Client s3Client;
@@ -92,9 +95,9 @@ public class ChannelServiceImpl implements ChannelService {
         channelRepository.save(channelEntity);
 
 
-/*
-        channelProducer.produce("channel",new UserNotificationRequest(channelEntity.getDescription(),"channel create"));
-*/
+
+        channelProducer.produce("channel",new UserNotificationRequest(channelEntity.getDescription(), "channel create"));
+
 
 
 
