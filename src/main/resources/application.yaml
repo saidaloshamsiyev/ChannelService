@@ -12,9 +12,9 @@ spring:
       max-file-size: 10MB
       max-request-size: 50MB
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:5432/metube
+    url: jdbc:postgresql://${DB_HOST:localhost}:5432/metube_local
     username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:8463}
+    password: ${DB_PASSWORD:1234}
   jpa:
     hibernate:
       ddl-auto: update
