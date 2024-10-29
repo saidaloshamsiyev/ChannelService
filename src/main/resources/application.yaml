@@ -24,7 +24,6 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
-
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:broker:29092}
     producer:
