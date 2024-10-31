@@ -13,7 +13,7 @@ spring:
       max-file-size: 10MB
       max-request-size: 50MB
   datasource:
-    url: jdbc:postgresql://${DB_HOST:159.65.119.240}:5432/metube
+    url: jdbc:postgresql://${DB_HOST:localhost}:5432/metube
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:8463}
   jpa:
