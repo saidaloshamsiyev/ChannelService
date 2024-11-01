@@ -100,7 +100,7 @@ public class ChannelController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/user/{userId}")
+    @GetMapping("subscribe/user/{userId}")
     public ResponseEntity<SubscriptionResponse> getAllSubscriptionsByUserId(@PathVariable UUID userId) {
         SubscriptionResponse response = subscriptionService.findAllSubsBySubsId(userId);
         return new ResponseEntity<>(response, HttpStatus.OK);
