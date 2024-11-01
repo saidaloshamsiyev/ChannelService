@@ -4,8 +4,11 @@ import jakarta.servlet.annotation.MultipartConfig;
 import lombok.RequiredArgsConstructor;
 import org.example.channelservice.domain.dto.request.ChannelRequest;
 import org.example.channelservice.domain.dto.request.ChannelUpdateRequest;
+import org.example.channelservice.domain.dto.request.SubscriptionRequest;
 import org.example.channelservice.domain.dto.response.ChannelResponse;
+import org.example.channelservice.domain.dto.response.SubscriptionResponse;
 import org.example.channelservice.service.ChannelService;
+import org.example.channelservice.service.subscription.SubscriptionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +26,7 @@ fileSizeThreshold = 10 * 1024)
 public class ChannelController {
 
     private final ChannelService channelService;
+    private final SubscriptionService subscriptionService;
     @PostMapping(value = "/create")
     public ResponseEntity<ChannelResponse> createChannel(
             @RequestPart("imageFile") MultipartFile imageFile,
@@ -76,5 +80,29 @@ public class ChannelController {
 //        long videoCount = channelService.countVideosByChannelId(channelId);
 //        return ResponseEntity.ok(videoCount);
 //    }
+
+    @PostMapping("subscribe/create")
+    public ResponseEntity<SubscriptionResponse> create(@RequestBody SubscriptionRequest subscriptionRequest) {
+        SubscriptionResponse response = subscriptionService.create(subscriptionRequest);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+//    @GetMapping("/{id}")
+//    public ResponseEntity<SubscriptionResponse> getSubscriptionById(@PathVariable UUID id) {
+//        SubscriptionResponse response = subscriptionService.findById(id);
+//        return new ResponseEntity<>(response, HttpStatus.OK);
+//    }
+
+    @DeleteMapping("subscribe/{id}")
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        subscriptionService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<SubscriptionResponse> getAllSubscriptionsByUserId(@PathVariable UUID userId) {
+        SubscriptionResponse response = subscriptionService.findAllSubsBySubsId(userId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }
 
