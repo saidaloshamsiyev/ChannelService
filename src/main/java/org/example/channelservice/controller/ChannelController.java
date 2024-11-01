@@ -19,7 +19,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/channel")
-@RequiredArgsConstructor()
+@RequiredArgsConstructor
 @MultipartConfig(maxFileSize = 10 * 1024 * 1024,
 maxRequestSize = 50 * 1024 * 1024,
 fileSizeThreshold = 10 * 1024)
@@ -31,6 +31,7 @@ public class ChannelController {
     public ResponseEntity<ChannelResponse> createChannel(
             @RequestPart("imageFile") MultipartFile imageFile,
             @RequestPart("jsonData") ChannelRequest channelRequest) {
+
         ChannelResponse savedChannel = channelService.save(channelRequest, imageFile);
         return new ResponseEntity<>(savedChannel, HttpStatus.CREATED);
     }
