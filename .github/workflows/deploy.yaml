@@ -49,6 +49,9 @@ jobs:
       - name: Set version
         run: echo "VERSION=20" >> $GITHUB_ENV
 
+
+
+
         # Step 7: Build and push Docker image
       - name: Build and push Docker image
         run: |
