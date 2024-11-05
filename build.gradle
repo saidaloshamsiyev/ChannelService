@@ -58,7 +58,8 @@ dependencies {
 //    implementation 'org.springdoc:springdoc-openapi-ui:1.6.15'
 //    implementation 'org.springdoc:springdoc-openapi-security:1.6.15'
 
-    implementation 'metube.com:metube_library:1.0.14'
+
+    implementation 'metube.com:metube_library:1.0.15'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
