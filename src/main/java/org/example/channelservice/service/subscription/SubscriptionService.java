@@ -11,6 +11,6 @@ public interface SubscriptionService {
     SubscriptionResponse create(SubscriptionRequest subscriptionRequest);
     SubscriptionEntity findById(UUID id);
     void delete(UUID id);
-    SubscriptionResponse findAllSubsBySubsId(UUID userId);
+    List<SubscriptionResponse> findAllSubsBySubsId(UUID userId);
 }
 

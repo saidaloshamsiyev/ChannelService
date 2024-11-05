@@ -69,25 +69,28 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             throw new BaseException("Channel not found", HttpStatus.NOT_FOUND.value());
         }
         subscriptionRepository.delete(subscription);
-        // channelServiceda kanaldan bu obunachini olib tashlash methodi bo'lishi kerak buyoda  cccccccccccccccccccccccc
         removeSubscriber(subscription.getChannelId(), subscription.getSubscriberId());
+        channelService.decrementSubscribeCount(subscription.getChannelId());
     }
 
-    @Override
-    public SubscriptionResponse findAllSubsBySubsId(UUID userId) {
-        UserResponse userResponse = userServiceClient.getUser(userId);
-        if (userResponse == null) {
-            throw new BaseException("User not found", HttpStatus.NOT_FOUND.value());
-        }
-        List<SubscriptionEntity> subscriptionEntityList = subscriptionRepository.findBySubscriberId(userId);
-        if (subscriptionEntityList.isEmpty()) {
-            throw new BaseException("Subscription not found", HttpStatus.NOT_FOUND.value());
-        }
-        return SubscriptionResponse.builder()
-                .channelId(subscriptionEntityList.get(0).getChannelId())
-                .subscriberId(subscriptionEntityList.get(0).getChannelId())
-                .build();
+@Override
+public List<SubscriptionResponse> findAllSubsBySubsId(UUID userId) {
+    UserResponse userResponse = userServiceClient.getUser(userId);
+    if (userResponse == null) {
+        throw new BaseException("User not found", HttpStatus.NOT_FOUND.value());
     }
+    List<SubscriptionEntity> subscriptionEntities = subscriptionRepository.findBySubscriberId(userId);
+    if (subscriptionEntities.isEmpty()) {
+        throw new BaseException("No subscriptions found for this user", HttpStatus.NOT_FOUND.value());
+    }
+    return subscriptionEntities.stream()
+            .map(subscription -> SubscriptionResponse.builder()
+                    .subscriberId(subscription.getSubscriberId())
+                    .channelId(subscription.getChannelId())
+                    .build())
+            .toList();
+}
+
 
     public void removeSubscriber(UUID channelId, UUID subscriberId) {
         UserResponse userResponse = userServiceClient.getUser(subscriberId);
@@ -98,6 +101,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         if (channelResponse == null) {
             throw new BaseException("Channel not found", HttpStatus.NOT_FOUND.value());
         }
+
     }
 }
 

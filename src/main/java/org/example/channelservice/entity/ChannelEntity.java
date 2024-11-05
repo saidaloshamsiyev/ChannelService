@@ -22,4 +22,5 @@ public class ChannelEntity extends BaseEntity {
     private String nickName;
     private UUID ownerId;
     private Integer subscriberCount;
+    private Integer complaintCount;
 }

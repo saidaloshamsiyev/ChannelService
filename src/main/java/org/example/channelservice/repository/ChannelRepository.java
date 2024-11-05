@@ -15,7 +15,7 @@ public interface ChannelRepository extends JpaRepository<ChannelEntity, UUID> {
     List<ChannelEntity>findAllByNickNameContainingIgnoreCaseOrNameContainingIgnoreCase(String nickName, String name);
 
     List<ChannelEntity> findByOwnerId(UUID ownerId);
-
+   Optional<ChannelEntity> findByNickName(String nickName);
 
 
 
