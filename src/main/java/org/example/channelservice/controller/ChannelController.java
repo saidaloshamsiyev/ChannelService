@@ -7,6 +7,7 @@ import org.example.channelservice.domain.dto.request.ChannelUpdateRequest;
 import org.example.channelservice.domain.dto.request.SubscriptionRequest;
 import org.example.channelservice.domain.dto.response.ChannelResponse;
 import org.example.channelservice.domain.dto.response.SubscriptionResponse;
+import org.example.channelservice.exception.BaseException;
 import org.example.channelservice.service.ChannelService;
 import org.example.channelservice.service.subscription.SubscriptionService;
 import org.springframework.http.HttpStatus;
@@ -75,6 +76,15 @@ public class ChannelController {
     }
 
 
+    @PostMapping("/report/{userId}")
+    public ResponseEntity<Void> reportChannel(
+            @PathVariable  UUID userId,
+            @RequestPart ("nickName") String nickName) {
+        channelService.reportChannelByNickname(nickName,userId);
+        return ResponseEntity.ok().build();
+    }
+
+
 
 //    @GetMapping("/{channelId}/videos/count")
 //    public ResponseEntity<Long> getVideoCountByChannel(@PathVariable UUID channelId) {
@@ -88,12 +98,6 @@ public class ChannelController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<SubscriptionResponse> getSubscriptionById(@PathVariable UUID id) {
-//        SubscriptionResponse response = subscriptionService.findById(id);
-//        return new ResponseEntity<>(response, HttpStatus.OK);
-//    }
-
     @DeleteMapping("subscribe/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         subscriptionService.delete(id);
@@ -101,9 +105,20 @@ public class ChannelController {
     }
 
     @GetMapping("subscribe/user/{userId}")
-    public ResponseEntity<SubscriptionResponse> getAllSubscriptionsByUserId(@PathVariable UUID userId) {
-        SubscriptionResponse response = subscriptionService.findAllSubsBySubsId(userId);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<List<SubscriptionResponse>> getAllSubscriptionsByUserId(@PathVariable UUID userId) {
+        List<SubscriptionResponse> allSubsBySubsId = subscriptionService.findAllSubsBySubsId(userId);
+        return ResponseEntity.ok(allSubsBySubsId);
+    }
+
+    @DeleteMapping("subscriber/delete/{subscriberId}")
+    public ResponseEntity<Void> removeSubscriber(
+            @PathVariable UUID subscriberId) {
+        try {
+            subscriptionService.delete(subscriberId);
+            return ResponseEntity.noContent().build();
+        } catch (BaseException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(null);
+        }
     }
 }
 

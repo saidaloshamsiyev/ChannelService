@@ -19,6 +19,7 @@ public interface ChannelService {
     ChannelResponse updateChannel(UUID channelId, ChannelUpdateRequest updateRequest);
     void incrementSubscribeCount(UUID channelId);
     void decrementSubscribeCount(UUID channelId);
+    public void reportChannelByNickname(String nickName,UUID userId);
 }
 
 

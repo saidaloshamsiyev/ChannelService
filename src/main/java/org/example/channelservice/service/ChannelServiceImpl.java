@@ -9,9 +9,11 @@ import org.example.channelservice.domain.dto.request.ChannelUpdateRequest;
 import org.example.channelservice.domain.dto.response.ChannelResponse;
 import org.example.channelservice.domain.dto.response.UserResponse;
 import org.example.channelservice.entity.ChannelEntity;
+import org.example.channelservice.entity.ChannelReportEntity;
 import org.example.channelservice.exception.BaseException;
 
 import org.example.channelservice.kafka.ChannelProducer;
+import org.example.channelservice.repository.ChannelReportRepository;
 import org.example.channelservice.repository.ChannelRepository;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -38,6 +40,7 @@ public class ChannelServiceImpl implements ChannelService {
     private final ChannelRepository channelRepository;
     private final UserServiceClient userServiceClient;
     private final S3Client s3Client;
+    private final ChannelReportRepository channelReportRepository;
 
 
     @Value("${cloud.aws.s3.bucket}")
@@ -240,8 +243,31 @@ public class ChannelServiceImpl implements ChannelService {
 
     }
 
+    @Override
+    public void reportChannelByNickname(String nickName,UUID userId) {
+        ChannelEntity channel = channelRepository.findByNickName(nickName)
+                .orElseThrow(() -> new BaseException("Channel not found", HttpStatus.NOT_FOUND.value()));
+        if (channelReportRepository.existsByUserIdAndChannelId(userId, channel.getId())) {
+            throw new BaseException("You have already reported this channel", HttpStatus.FORBIDDEN.value());
+        }
 
-    // this is line for all videos count in one channel's method
+        // Increment complaint count if the report is new
+        if (channel.getComplaintCount() == null) {
+            channel.setComplaintCount(0);
+        }
+        channel.setComplaintCount(channel.getComplaintCount() + 1);
+        ChannelReportEntity report = new ChannelReportEntity();
+        report.setUserId(userId);
+        report.setChannelId(channel.getId());
+        channelReportRepository.save(report);
 
-
+        if (channel.getComplaintCount() >= 5) {
+            channelRepository.delete(channel);
+        } else {
+            channelRepository.save(channel);
+        }
+    }
 }
+
+
+
