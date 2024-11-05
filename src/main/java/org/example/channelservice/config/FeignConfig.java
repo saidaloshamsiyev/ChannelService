@@ -22,6 +22,7 @@ public class FeignConfig {
             /*requestTemplate.header("X-Roles",roles);*/
 
         };
+
     }
   /*  @Bean
     public RequestInterceptor requestInterceptor() {
