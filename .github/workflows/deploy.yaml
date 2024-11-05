@@ -47,8 +47,8 @@ jobs:
 
       # Step 6: Define the VERSION environment variable
       - name: Set version
-        run: echo "VERSION=20" >> $GITHUB_ENV
 
+        run: echo "VERSION=20" >> $GITHUB_ENV
 
 
 
