@@ -1,5 +1,6 @@
 package org.example.channelservice.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import metube.com.dto.request.UserNotificationRequest;
@@ -15,6 +16,7 @@ import org.example.channelservice.exception.BaseException;
 import org.example.channelservice.kafka.ChannelProducer;
 import org.example.channelservice.repository.ChannelReportRepository;
 import org.example.channelservice.repository.ChannelRepository;
+import org.example.channelservice.repository.SubscriptionRepository;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.http.HttpStatus;
@@ -41,6 +43,7 @@ public class ChannelServiceImpl implements ChannelService {
     private final UserServiceClient userServiceClient;
     private final S3Client s3Client;
     private final ChannelReportRepository channelReportRepository;
+    private final SubscriptionRepository subscriptionRepository;
 
 
     @Value("${cloud.aws.s3.bucket}")
@@ -129,9 +132,11 @@ public class ChannelServiceImpl implements ChannelService {
                 .subscriberCount(channelEntity.getSubscriberCount())
                 .build();
     }
-
+    @Transactional
     @Override
     public void delete(UUID id) {
+        subscriptionRepository.deleteByChannelId(id);
+        channelReportRepository.deleteByChannelId(id);
         channelRepository.deleteById(id);
     }
 
@@ -250,8 +255,6 @@ public class ChannelServiceImpl implements ChannelService {
         if (channelReportRepository.existsByUserIdAndChannelId(userId, channel.getId())) {
             throw new BaseException("You have already reported this channel", HttpStatus.FORBIDDEN.value());
         }
-
-        // Increment complaint count if the report is new
         if (channel.getComplaintCount() == null) {
             channel.setComplaintCount(0);
         }
@@ -262,6 +265,8 @@ public class ChannelServiceImpl implements ChannelService {
         channelReportRepository.save(report);
 
         if (channel.getComplaintCount() >= 5) {
+            subscriptionRepository.deleteByChannelId(channel.getId());
+            channelReportRepository.deleteByChannelId(channel.getId());
             channelRepository.delete(channel);
         } else {
             channelRepository.save(channel);

@@ -11,5 +11,6 @@ import java.util.UUID;
 public interface SubscriptionRepository extends JpaRepository<SubscriptionEntity, UUID> {
     Optional<SubscriptionEntity> findBySubscriberIdAndChannelId(UUID subscriberId, UUID channelId);
     List<SubscriptionEntity> findBySubscriberId(UUID subscriberId);
+    void deleteByChannelId(UUID channelId);
 
 }
