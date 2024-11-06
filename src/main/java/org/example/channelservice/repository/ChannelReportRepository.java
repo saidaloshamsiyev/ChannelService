@@ -9,5 +9,7 @@ import java.util.UUID;
 @Repository
 public interface ChannelReportRepository extends JpaRepository<ChannelReportEntity,UUID> {
     boolean existsByUserIdAndChannelId(UUID userId, UUID channelId);
+    void deleteByChannelId(UUID channelId);
 
 }
+
