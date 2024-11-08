@@ -28,7 +28,7 @@ spring:
 
 
   kafka:
-    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:159.65.119.240:9092,159.65.119.240:9093,159.65.119.240:9094}
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:64.226.98.154:9092,64.226.98.154:9093,64.226.98.154:9094}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer

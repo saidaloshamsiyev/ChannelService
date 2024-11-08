@@ -22,7 +22,7 @@ public class AppConfig {
     public ProducerFactory<String, UserNotificationRequest> producerFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "159.65.119.240:9092,159.65.119.240:9093,159.65.119.240:9094");
+        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "64.226.98.154:9092,64.226.98.154:9093,64.226.98.154:9094");
         configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         return new DefaultKafkaProducerFactory<>(configProps);
 
