@@ -1,6 +1,7 @@
 package org.example.channelservice.domain.dto.response;
 import lombok.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -15,6 +16,7 @@ public class ChannelResponse {
     private String nickName;
     private UUID ownerId;
     private Integer subscriberCount;
+    private List<VideoResponse> videos;
 }
 
 
