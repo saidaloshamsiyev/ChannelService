@@ -2,7 +2,6 @@ package org.example.channelservice.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-
 import metube.com.dto.request.UserNotificationRequest;
 import org.example.channelservice.clients.UserServiceClient;
 import org.example.channelservice.clients.VideoServiceClient;
@@ -106,11 +105,11 @@ public class ChannelServiceImpl implements ChannelService {
 
 
 
-        channelProducer.produce("channel",new UserNotificationRequest(channelEntity.getDescription(), "channel create"));
+        channelProducer.produce("channel",new UserNotificationRequest (channelEntity.getDescription(), "channel create"));
 
 
         String imageUrl = "https://us-east-1.console.aws.amazon.com/s3/object/" + bucketName +
-                "?region=us-east-1&bucketType=general&prefix=" + fileName;
+                    "?region=us-east-1&bucketType=general&prefix=" + fileName;
 
         return ChannelResponse.builder()
                 .name(channelEntity.getName())
