@@ -47,10 +47,12 @@ jobs:
 
       # Step 6: Define the VERSION environment variable
       - name: Set version
-        run: echo "VERSION=25" >> $GITHUB_ENV
+        run: echo "VERSION=3" >> $GITHUB_ENV
 
 
 
+
+        
 
         # Step 7: Build and push Docker image
       - name: Build and push Docker image

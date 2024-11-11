@@ -109,13 +109,14 @@ public class ChannelServiceImpl implements ChannelService {
         channelProducer.produce("channel",new UserNotificationRequest(channelEntity.getDescription(), "channel create"));
 
 
-
+        String imageUrl = "https://us-east-1.console.aws.amazon.com/s3/object/" + bucketName +
+                "?region=us-east-1&bucketType=general&prefix=" + fileName;
 
         return ChannelResponse.builder()
                 .name(channelEntity.getName())
                 .nickName(channelEntity.getNickName())
                 .description(channelEntity.getDescription())
-                .imagePath("https://" + bucketName + "." + region + ".digitaloceanspaces.com/" + fileName)
+                .imagePath(imageUrl)
                 .ownerId(channelEntity.getOwnerId())
                 .subscriberCount(channelEntity.getSubscriberCount())
                 .build();
