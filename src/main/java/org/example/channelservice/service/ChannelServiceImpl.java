@@ -2,13 +2,14 @@ package org.example.channelservice.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-
 import metube.com.dto.request.UserNotificationRequest;
 import org.example.channelservice.clients.UserServiceClient;
+import org.example.channelservice.clients.VideoServiceClient;
 import org.example.channelservice.domain.dto.request.ChannelRequest;
 import org.example.channelservice.domain.dto.request.ChannelUpdateRequest;
 import org.example.channelservice.domain.dto.response.ChannelResponse;
 import org.example.channelservice.domain.dto.response.UserResponse;
+import org.example.channelservice.domain.dto.response.VideoResponse;
 import org.example.channelservice.entity.ChannelEntity;
 import org.example.channelservice.entity.ChannelReportEntity;
 import org.example.channelservice.exception.BaseException;
@@ -44,6 +45,7 @@ public class ChannelServiceImpl implements ChannelService {
     private final S3Client s3Client;
     private final ChannelReportRepository channelReportRepository;
     private final SubscriptionRepository subscriptionRepository;
+    private final VideoServiceClient videoServiceClient;
 
 
     @Value("${cloud.aws.s3.bucket}")
@@ -103,11 +105,11 @@ public class ChannelServiceImpl implements ChannelService {
 
 
 
-        channelProducer.produce("channel",new UserNotificationRequest(channelEntity.getDescription(), "channel create"));
+        channelProducer.produce("channel",new UserNotificationRequest (channelEntity.getDescription(), "channel create"));
 
 
         String imageUrl = "https://us-east-1.console.aws.amazon.com/s3/object/" + bucketName +
-                "?region=us-east-1&bucketType=general&prefix=" + fileName;
+                    "?region=us-east-1&bucketType=general&prefix=" + fileName;
 
         return ChannelResponse.builder()
                 .name(channelEntity.getName())
@@ -177,7 +179,6 @@ public class ChannelServiceImpl implements ChannelService {
 
     @Override
     public List<ChannelResponse> findAllByOwnerId(UUID ownerId) {
-
         UserResponse userResponse = userServiceClient.getUser(ownerId);
         if (userResponse == null) {
             throw new BaseException("User not found", HttpStatus.NOT_FOUND.value());
@@ -195,6 +196,11 @@ public class ChannelServiceImpl implements ChannelService {
                         .build()
         ).collect(Collectors.toList());
     }
+
+
+
+
+
 
     @Override
     public ChannelResponse updateChannel(UUID channelId, ChannelUpdateRequest updateRequest) {

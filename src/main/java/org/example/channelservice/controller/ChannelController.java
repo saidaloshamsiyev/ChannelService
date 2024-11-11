@@ -1,12 +1,13 @@
 package org.example.channelservice.controller;
-
 import jakarta.servlet.annotation.MultipartConfig;
 import lombok.RequiredArgsConstructor;
+import org.example.channelservice.clients.VideoServiceClient;
 import org.example.channelservice.domain.dto.request.ChannelRequest;
 import org.example.channelservice.domain.dto.request.ChannelUpdateRequest;
 import org.example.channelservice.domain.dto.request.SubscriptionRequest;
 import org.example.channelservice.domain.dto.response.ChannelResponse;
 import org.example.channelservice.domain.dto.response.SubscriptionResponse;
+import org.example.channelservice.domain.dto.response.VideoResponse;
 import org.example.channelservice.exception.BaseException;
 import org.example.channelservice.service.ChannelService;
 import org.example.channelservice.service.subscription.SubscriptionService;
@@ -14,9 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
 import java.util.UUID;
+
 
 @RestController
 @RequestMapping("/api/channel")
@@ -28,14 +29,15 @@ public class ChannelController {
 
     private final ChannelService channelService;
     private final SubscriptionService subscriptionService;
+    private final VideoServiceClient videoServiceClient;
     @PostMapping(value = "/create")
     public ResponseEntity<ChannelResponse> createChannel(
             @RequestPart("imageFile") MultipartFile imageFile,
             @RequestPart("jsonData") ChannelRequest channelRequest) {
-
         ChannelResponse savedChannel = channelService.save(channelRequest, imageFile);
         return new ResponseEntity<>(savedChannel, HttpStatus.CREATED);
     }
+
 
 
 
@@ -119,6 +121,12 @@ public class ChannelController {
         } catch (BaseException e) {
             return ResponseEntity.status(e.getStatusCode()).body(null);
         }
+    }
+
+    @GetMapping("/videos/{channelId}")
+    public ResponseEntity<List<VideoResponse>> getVideosByChannelId(@PathVariable UUID channelId) {
+        List<VideoResponse> videos = videoServiceClient.getVideosByChannelId(channelId);
+        return ResponseEntity.ok(videos);
     }
 }
 

@@ -24,3 +24,13 @@ public class ChannelEntity extends BaseEntity {
     private Integer subscriberCount;
     private Integer complaintCount;
 }
+
+
+
+
+
+
+
+
+
+
