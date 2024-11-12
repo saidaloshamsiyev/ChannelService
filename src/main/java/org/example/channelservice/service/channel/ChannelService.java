@@ -1,4 +1,4 @@
-package org.example.channelservice.service;
+package org.example.channelservice.service.channel;
 
 import org.example.channelservice.domain.dto.request.ChannelRequest;
 import org.example.channelservice.domain.dto.request.ChannelUpdateRequest;

@@ -9,7 +9,7 @@ import org.example.channelservice.domain.dto.response.UserResponse;
 import org.example.channelservice.entity.SubscriptionEntity;
 import org.example.channelservice.exception.BaseException;
 import org.example.channelservice.repository.SubscriptionRepository;
-import org.example.channelservice.service.ChannelService;
+import org.example.channelservice.service.channel.ChannelService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
