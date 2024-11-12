@@ -1,4 +1,4 @@
-package org.example.channelservice.service;
+package org.example.channelservice.service.channel;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,6 @@ import org.example.channelservice.domain.dto.request.ChannelRequest;
 import org.example.channelservice.domain.dto.request.ChannelUpdateRequest;
 import org.example.channelservice.domain.dto.response.ChannelResponse;
 import org.example.channelservice.domain.dto.response.UserResponse;
-import org.example.channelservice.domain.dto.response.VideoResponse;
 import org.example.channelservice.entity.ChannelEntity;
 import org.example.channelservice.entity.ChannelReportEntity;
 import org.example.channelservice.exception.BaseException;
@@ -29,7 +28,6 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;

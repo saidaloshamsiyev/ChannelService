@@ -6,10 +6,12 @@ import org.example.channelservice.domain.dto.request.ChannelRequest;
 import org.example.channelservice.domain.dto.request.ChannelUpdateRequest;
 import org.example.channelservice.domain.dto.request.SubscriptionRequest;
 import org.example.channelservice.domain.dto.response.ChannelResponse;
+import org.example.channelservice.domain.dto.response.FavoriteChannelResponse;
 import org.example.channelservice.domain.dto.response.SubscriptionResponse;
 import org.example.channelservice.domain.dto.response.VideoResponse;
 import org.example.channelservice.exception.BaseException;
-import org.example.channelservice.service.ChannelService;
+import org.example.channelservice.service.channel.ChannelService;
+import org.example.channelservice.service.favorite.FavoriteChannelService;
 import org.example.channelservice.service.subscription.SubscriptionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,11 @@ public class ChannelController {
     private final ChannelService channelService;
     private final SubscriptionService subscriptionService;
     private final VideoServiceClient videoServiceClient;
+    private final FavoriteChannelService favoriteChannelService;
+
+
+
+
     @PostMapping(value = "/create")
     public ResponseEntity<ChannelResponse> createChannel(
             @RequestPart("imageFile") MultipartFile imageFile,
@@ -128,5 +135,35 @@ public class ChannelController {
         List<VideoResponse> videos = videoServiceClient.getVideosByChannelId(channelId);
         return ResponseEntity.ok(videos);
     }
+
+    ////////////////////////// favorite channel
+
+    @PostMapping("/favorite/channel")
+    public String addFavoriteChannel(@RequestParam UUID userId, @RequestParam UUID channelId) {
+
+        favoriteChannelService.addFavoriteChannel(userId, channelId);
+        return "Channel added to favorites!";
+    }
+
+    @GetMapping("/favorite/{userId}")
+    public List<FavoriteChannelResponse> getFavoriteChannels(@PathVariable UUID userId) {
+        return favoriteChannelService.getFavoriteChannels(userId);
+    }
+
+    @DeleteMapping("/favorite/remove")
+    public String removeFavoriteChannel(@RequestParam UUID userId, @RequestParam UUID channelId) {
+        favoriteChannelService.removeFavoriteChannel(userId, channelId);
+        return "Channel removed from favorites!";
+    }
+
+    @PostMapping("/toggle")
+    public String toggleFavoriteChannel(@RequestParam UUID userId, @RequestParam UUID channelId) {
+        favoriteChannelService.toggleFavoriteChannel(userId, channelId);
+        return "Channel favorite status toggled successfully!";
+    }
+
+
+
+
 }
 
